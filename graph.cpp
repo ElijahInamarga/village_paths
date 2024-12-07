@@ -51,44 +51,35 @@ struct Edge {
 };
 
 std::vector<Edge> heapify(std::vector<Edge> arr) {
-    for (int i = arr.size() / 2 - 1; i >= 0; i--) {
+    // Build the heap using upheap
+    for(int i = 0; i < arr.size(); i++) {
         int current = i;
-        int original;
-        do {
-            original = current;
-            int smallest = original;
-            int lChild = current * 2 + 1;
-            int rChild = current * 2 + 2;
-
-            // Find the smallest of the current, left, and right child
-            if (lChild < arr.size() && arr[lChild].weight < arr[smallest].weight)
-                smallest = lChild;
-            if (rChild < arr.size() && arr[rChild].weight < arr[smallest].weight)
-                smallest = rChild;
-
-            if (smallest != current) {
-                std::swap(arr[current], arr[smallest]);
-                current = smallest;
-            }
-        } while (current != original);
+        int parent = (current - 1) / 2;
+        while(current != 0 && arr[current].weight < arr[parent].weight) {
+            std::swap(arr[current], arr[parent]);
+            current = parent;
+            parent = (current - 1) / 2;
+        }
     }
-
     return arr;
 }
 
+// Main function to perform heap sort on the array
 std::vector<Edge> heapSort(std::vector<Edge> arr) {
-    const int originalSize = arr.size();
-    int n = arr.size();
-    
+    // Step 1: Build a min-heap
     arr = heapify(arr);
-    std::vector<Edge> temp(originalSize);
 
-    // Step 2: Extract elements from the heap one by one
-    while (n > 0) {
+    const int originalSize = arr.size();
+    std::vector<Edge> temp(originalSize);
+    int n = arr.size();
+
+    while(n > 0) {
+        // Step 2: Extract elements from the heap one by one
         temp[originalSize - n] = arr[0];
         std::swap(arr[0], arr[n - 1]);
-        n--; // Reduce heap size
+        n--;
 
+        // Step 3: Down Heapify
         int current = 0;
         int original;
         do {
@@ -98,16 +89,16 @@ std::vector<Edge> heapSort(std::vector<Edge> arr) {
             int rChild = current * 2 + 2;
 
             // Find the smallest
-            if (lChild < n && arr[lChild].weight < arr[smallest].weight)
+            if(lChild < n && arr[lChild].weight < arr[smallest].weight)
                 smallest = lChild;
-            if (rChild < n && arr[rChild].weight < arr[smallest].weight)
+            if(rChild < n && arr[rChild].weight < arr[smallest].weight)
                 smallest = rChild;
 
-            if (smallest != current) {
+            if(smallest != current) {
                 std::swap(arr[current], arr[smallest]);
                 current = smallest;
             }
-        } while (current != original);
+        } while(current != original);
     }
 
     return temp;
@@ -140,6 +131,9 @@ int Graph::primMST(std::vector<int>& mstStart, std::vector<int>& mstEnd) {
 
     // Sort minWeight
     minWeight = heapSort(minWeight);
+
+    // DELETE ME
+    // Print minWeight
     for(int i = 0; i < minWeight.size(); i++) {
         std::cout << minWeight[i].node1 << minWeight[i].node2 << minWeight[i].weight << std::endl;
     }
