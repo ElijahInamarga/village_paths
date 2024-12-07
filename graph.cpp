@@ -50,36 +50,45 @@ struct Edge {
     int node1, node2, weight;
 };
 
-void heapify(std::vector<Edge> arr) {
-    // Your code here
-    // Build the heap
-    for(int i = 0; i < arr.size(); i++) {
+std::vector<Edge> heapify(std::vector<Edge> arr) {
+    for (int i = arr.size() / 2 - 1; i >= 0; i--) {
         int current = i;
-        int parent = (current - 1) / 2;
-        while(current != 0 && arr[current].weight < arr[parent].weight) {
-            std::swap(arr[current], arr[parent]);
-            current = parent;
-            parent = (current - 1) / 2;
-        }
+        int original;
+        do {
+            original = current;
+            int smallest = original;
+            int lChild = current * 2 + 1;
+            int rChild = current * 2 + 2;
+
+            // Find the smallest of the current, left, and right child
+            if (lChild < arr.size() && arr[lChild].weight < arr[smallest].weight)
+                smallest = lChild;
+            if (rChild < arr.size() && arr[rChild].weight < arr[smallest].weight)
+                smallest = rChild;
+
+            if (smallest != current) {
+                std::swap(arr[current], arr[smallest]);
+                current = smallest;
+            }
+        } while (current != original);
     }
+
+    return arr;
 }
 
-// Main function to perform heap sort on the array
 std::vector<Edge> heapSort(std::vector<Edge> arr) {
-    // Step 1: Build a min-heap
-    heapify(arr);
-
     const int originalSize = arr.size();
-    std::vector<Edge> temp(originalSize);
     int n = arr.size();
+    
+    arr = heapify(arr);
+    std::vector<Edge> temp(originalSize);
 
-    while(n > 0) {
-        // Step 2: Extract elements from the heap one by one
+    // Step 2: Extract elements from the heap one by one
+    while (n > 0) {
         temp[originalSize - n] = arr[0];
         std::swap(arr[0], arr[n - 1]);
-        n--;
+        n--; // Reduce heap size
 
-        // Step 3: Down Heapify
         int current = 0;
         int original;
         do {
@@ -89,30 +98,19 @@ std::vector<Edge> heapSort(std::vector<Edge> arr) {
             int rChild = current * 2 + 2;
 
             // Find the smallest
-            if(lChild < n && arr[lChild].weight < arr[smallest].weight)
+            if (lChild < n && arr[lChild].weight < arr[smallest].weight)
                 smallest = lChild;
-            if(rChild < n && arr[rChild].weight < arr[smallest].weight)
+            if (rChild < n && arr[rChild].weight < arr[smallest].weight)
                 smallest = rChild;
 
-            if(smallest != current) {
+            if (smallest != current) {
                 std::swap(arr[current], arr[smallest]);
                 current = smallest;
             }
-        } while(current != original);
+        } while (current != original);
     }
 
-    // Copy temp back to array
-    for(int i = 0; i < originalSize; i++) {
-        arr[i] = temp[i];
-    }
-
-    // DELETE LATER
-    // Print heapified minWeight
-    for(int i = 0; i < arr.size(); i++) {
-        std::cout << arr[i].node1 << arr[i].node2 << arr[i].weight << std::endl;
-    }
-
-    return arr;
+    return temp;
 }
 
 // Prim's algorithm to find the MST
@@ -142,6 +140,9 @@ int Graph::primMST(std::vector<int>& mstStart, std::vector<int>& mstEnd) {
 
     // Sort minWeight
     minWeight = heapSort(minWeight);
+    for(int i = 0; i < minWeight.size(); i++) {
+        std::cout << minWeight[i].node1 << minWeight[i].node2 << minWeight[i].weight << std::endl;
+    }
 
     // 3. Use a loop to find the minimum weight edge at each step
     // 4. Update MST edges (mstStart and mstEnd vectors)
