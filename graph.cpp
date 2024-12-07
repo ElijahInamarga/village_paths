@@ -12,20 +12,24 @@ bool Graph::loadGraphFromFile(const std::string& filename) {
     int numEdges;
     infile >> numNodes >> numEdges;
 
-    // Implement the adjacency matrix setup
-    std::vector<std::vector<int>> adjacencyMatrix(numNodes, std::vector(numNodes, 0));
+    // Initialize 2-D vector size
+    for(int i = 0; i < numEdges; i++) {
+        std::vector<int> temp(numEdges); 
+        adjMatrix.push_back(temp);
+    }
 
+    // Implement the adjacency matrix setup
     for(int i = 0; i < numEdges; i++) {
         int vertex1, vertex2, weight;
         infile >> vertex1 >> vertex2 >> weight;
-        adjacencyMatrix[vertex1 - 1][vertex2 - 1] = weight; // vertex - 1 b/c input.txt uses index starting with 1 instead of 0
+        adjMatrix[vertex1 - 1][vertex2 - 1] = weight; // vertex - 1 b/c input.txt uses index starting with 1 instead of 0
     }
 
     // DELETE LATER!!!
     // Print adjacency matrix 
-    for(int i = 0; i < adjacencyMatrix.size(); i++) {
-        for(int j = 0; j < adjacencyMatrix[i].size(); j++) {
-            std::cout << adjacencyMatrix[i][j] << " ";
+    for(int i = 0; i < adjMatrix.size(); i++) {
+        for(int j = 0; j < adjMatrix[i].size(); j++) {
+            std::cout << adjMatrix[i][j] << " ";
         }
         std::cout << std::endl;
     }
@@ -44,7 +48,12 @@ int Graph::primMST(std::vector<int>& mstStart, std::vector<int>& mstEnd) {
 
     // Steps:
     // 1. Initialize visited array and minWeight array
+    int visitedArray[numNodes];
+    std::vector<int> minWeight;
     // 2. Start from node 1
+    
+
+
     // 3. Use a loop to find the minimum weight edge at each step
     // 4. Update MST edges (mstStart and mstEnd vectors)
     // 5. Return the total cost of the MST
