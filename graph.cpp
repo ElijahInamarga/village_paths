@@ -27,12 +27,12 @@ bool Graph::loadGraphFromFile(const std::string& filename) {
 
     // DELETE LATER!!!
     // Print adjacency matrix 
-    for(int i = 0; i < numNodes; i++) {
-        for(int j = 0; j < numNodes; j++) {
-            std::cout << adjMatrix[i][j] << " ";
-        }
-        std::cout << std::endl;
-    }
+    // for(int i = 0; i < numNodes; i++) {
+    //     for(int j = 0; j < numNodes; j++) {
+    //         std::cout << adjMatrix[i][j] << " ";
+    //     }
+    //     std::cout << std::endl;
+    // }
     
     // Comment this line before submission
     //std::cout << "TODO: Implement adjacency matrix initialization here.\n";
@@ -107,45 +107,64 @@ std::vector<Edge> heapSort(std::vector<Edge> arr) {
 // Prim's algorithm to find the MST
 int Graph::primMST(std::vector<int>& mstStart, std::vector<int>& mstEnd) {
     // Placeholder for visited nodes and minimum weight initialization
-    std::cout << "TODO: Implement Prim's algorithm here.\n";
+    // std::cout << "TODO: Implement Prim's algorithm here.\n";
 
     // Steps:
 
     // 1. Initialize visited array and minWeight array
-    int visitedArray[numNodes];
+    bool visitedArray[numNodes];
+    for(int i = 0; i < numNodes; i++) {
+        visitedArray[i] = false;
+    }
     std::vector<Edge> minWeight;
 
     // 2. Start from node 1
     int vertex = 1;
 
-    // Adds all of node's edges into minWeight
-    for(int i = 0; i < adjMatrix[0].size(); i++) {
-        if(adjMatrix[vertex - 1][i] != 0) {
-            Edge tempEdge;
-            tempEdge.node1 = vertex;
-            tempEdge.node2 = i + 1 ;
-            tempEdge.weight = adjMatrix[vertex - 1][i];
-            minWeight.push_back(tempEdge);
+    do {
+        bool visited = true;
+        visitedArray[vertex - 1] = visited;
+
+        // Adds all of node's edges into the heap
+        for(int i = 0; i < adjMatrix[0].size(); i++) {
+            if(adjMatrix[vertex - 1][i] != 0) {
+                Edge tempEdge;
+                tempEdge.node1 = vertex;
+                tempEdge.node2 = i + 1 ;
+                tempEdge.weight = adjMatrix[vertex - 1][i];
+                minWeight.push_back(tempEdge);
+            }
         }
-    }
+        // Sort minWeight
+        minWeight = heapSort(minWeight);
 
-    // Sort minWeight
-    minWeight = heapSort(minWeight);
+        // DELETE ME
+        // Print minWeight
+        for(int i = 0; i < minWeight.size(); i++) {
+            std::cout << minWeight[i].weight << ", ";
+        }
+        std::cout<< std::endl;
 
-    // DELETE ME
-    // Print minWeight
-    for(int i = 0; i < minWeight.size(); i++) {
-        std::cout << minWeight[i].node1 << minWeight[i].node2 << minWeight[i].weight << std::endl;
-    }
+        // 3. Use a loop to find the minimum weight edge at each step
+        Edge edgeToTake;
+        while(true) {
+            edgeToTake = minWeight[0];
+            minWeight.erase(minWeight.begin());
 
-    // 3. Use a loop to find the minimum weight edge at each step
-    // 4. Update MST edges (mstStart and mstEnd vectors)
+            if(visitedArray[edgeToTake.node2 - 1 == !visited] || minWeight.size() != 0)
+                break;
+        } 
+
+        // 4. Update MST edges (mstStart and mstEnd vectors)
+        mstStart.push_back(edgeToTake.node1);
+        mstEnd.push_back(edgeToTake.node2);
+        vertex = edgeToTake.node2;
+    } while(minWeight.size() != 0);
+
     // 5. Return the total cost of the MST
 
     // Placeholder output
-    mstStart.push_back(1);
-    mstEnd.push_back(2);
-    std::cout << "TODO: Replace placeholder MST output with the actual MST.\n";
+    // std::cout << "TODO: Replace placeholder MST output with the actual MST.\n";
 
     return 0; // TODO: Return the actual total cost of the MST
 }
