@@ -13,8 +13,8 @@ bool Graph::loadGraphFromFile(const std::string& filename) {
     infile >> numNodes >> numEdges;
 
     // Initialize 2-D vector size
-    for(int i = 0; i < numEdges; i++) {
-        std::vector<int> temp(numEdges); 
+    for(int i = 0; i < numNodes; i++) {
+        std::vector<int> temp(numNodes); 
         adjMatrix.push_back(temp);
     }
 
@@ -27,8 +27,8 @@ bool Graph::loadGraphFromFile(const std::string& filename) {
 
     // DELETE LATER!!!
     // Print adjacency matrix 
-    for(int i = 0; i < adjMatrix.size(); i++) {
-        for(int j = 0; j < adjMatrix[i].size(); j++) {
+    for(int i = 0; i < numNodes; i++) {
+        for(int j = 0; j < numNodes; j++) {
             std::cout << adjMatrix[i][j] << " ";
         }
         std::cout << std::endl;
@@ -41,18 +41,107 @@ bool Graph::loadGraphFromFile(const std::string& filename) {
     return true;
 }
 
+/*
+* Edge object:
+* Node1 -- node of origin
+* Node2 -- destination node
+*/
+struct Edge {
+    int node1, node2, weight;
+};
+
+void heapify(std::vector<Edge> arr) {
+    // Your code here
+    // Build the heap
+    for(int i = 0; i < arr.size(); i++) {
+        int current = i;
+        int parent = (current - 1) / 2;
+        while(current != 0 && arr[current].weight < arr[parent].weight) {
+            std::swap(arr[current], arr[parent]);
+            current = parent;
+            parent = (current - 1) / 2;
+        }
+    }
+}
+
+// Main function to perform heap sort on the array
+std::vector<Edge> heapSort(std::vector<Edge> arr) {
+    // Step 1: Build a min-heap
+    heapify(arr);
+
+    const int originalSize = arr.size();
+    std::vector<Edge> temp(originalSize);
+    int n = arr.size();
+
+    while(n > 0) {
+        // Step 2: Extract elements from the heap one by one
+        temp[originalSize - n] = arr[0];
+        std::swap(arr[0], arr[n - 1]);
+        n--;
+
+        // Step 3: Down Heapify
+        int current = 0;
+        int original;
+        do {
+            original = current;
+            int smallest = original;
+            int lChild = current * 2 + 1;
+            int rChild = current * 2 + 2;
+
+            // Find the smallest
+            if(lChild < n && arr[lChild].weight < arr[smallest].weight)
+                smallest = lChild;
+            if(rChild < n && arr[rChild].weight < arr[smallest].weight)
+                smallest = rChild;
+
+            if(smallest != current) {
+                std::swap(arr[current], arr[smallest]);
+                current = smallest;
+            }
+        } while(current != original);
+    }
+
+    // Copy temp back to array
+    for(int i = 0; i < originalSize; i++) {
+        arr[i] = temp[i];
+    }
+
+    // DELETE LATER
+    // Print heapified minWeight
+    for(int i = 0; i < arr.size(); i++) {
+        std::cout << arr[i].node1 << arr[i].node2 << arr[i].weight << std::endl;
+    }
+
+    return arr;
+}
+
 // Prim's algorithm to find the MST
 int Graph::primMST(std::vector<int>& mstStart, std::vector<int>& mstEnd) {
     // Placeholder for visited nodes and minimum weight initialization
     std::cout << "TODO: Implement Prim's algorithm here.\n";
 
     // Steps:
+
     // 1. Initialize visited array and minWeight array
     int visitedArray[numNodes];
-    std::vector<int> minWeight;
-    // 2. Start from node 1
-    
+    std::vector<Edge> minWeight;
 
+    // 2. Start from node 1
+    int vertex = 1;
+
+    // Adds all of node's edges into minWeight
+    for(int i = 0; i < adjMatrix[0].size(); i++) {
+        if(adjMatrix[vertex - 1][i] != 0) {
+            Edge tempEdge;
+            tempEdge.node1 = vertex;
+            tempEdge.node2 = i + 1 ;
+            tempEdge.weight = adjMatrix[vertex - 1][i];
+            minWeight.push_back(tempEdge);
+        }
+    }
+
+    // Sort minWeight
+    minWeight = heapSort(minWeight);
 
     // 3. Use a loop to find the minimum weight edge at each step
     // 4. Update MST edges (mstStart and mstEnd vectors)
