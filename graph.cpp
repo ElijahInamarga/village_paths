@@ -14,7 +14,7 @@ bool Graph::loadGraphFromFile(const std::string& filename) {
 
     // Initialize 2-D vector size
     for(int i = 0; i < numNodes; i++) {
-        std::vector<int> temp(numNodes); 
+        std::vector<int> temp(numNodes, INF); 
         adjMatrix.push_back(temp);
     }
 
@@ -25,18 +25,6 @@ bool Graph::loadGraphFromFile(const std::string& filename) {
         adjMatrix[vertex1 - 1][vertex2 - 1] = weight; // vertex - 1 b/c input.txt uses index starting with 1 instead of 0
         adjMatrix[vertex2 - 1][vertex1 - 1] = weight; // The graph is undirected
     }
-
-    // DELETE LATER!!!
-    // Print adjacency matrix 
-    // for(int i = 0; i < numNodes; i++) {
-    //     for(int j = 0; j < numNodes; j++) {
-    //         std::cout << adjMatrix[i][j] << " ";
-    //     }
-    //     std::cout << std::endl;
-    // }
-    
-    // Comment this line before submission
-    //std::cout << "TODO: Implement adjacency matrix initialization here.\n";
 
     infile.close();
     return true;
@@ -123,7 +111,7 @@ int Graph::primMST(std::vector<int>& mstStart, std::vector<int>& mstEnd) {
     int vertex = 1;
     visitedArray[vertex - 1] = true;
     for(int i = 0; i < adjMatrix[0].size(); i++) {
-        if(adjMatrix[vertex - 1][i] != 0) {
+        if(adjMatrix[vertex - 1][i] != INF) {
             Edge tempEdge;
             tempEdge.node1 = vertex;
             tempEdge.node2 = i + 1;
@@ -170,7 +158,7 @@ int Graph::primMST(std::vector<int>& mstStart, std::vector<int>& mstEnd) {
 
         // Add vertex's edges to heap
         for(int i = 0; i < adjMatrix[0].size(); i++) {
-            if(adjMatrix[vertex - 1][i] != 0) {
+            if(adjMatrix[vertex - 1][i] != INF) {
                 Edge tempEdge;
                 tempEdge.node1 = vertex;
                 tempEdge.node2 = i + 1;
@@ -182,6 +170,5 @@ int Graph::primMST(std::vector<int>& mstStart, std::vector<int>& mstEnd) {
     }
 
     // 5. Return the total cost of the MST
-
     return cost; // TODO: Return the actual total cost of the MST
 }
