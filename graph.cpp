@@ -109,7 +109,7 @@ std::vector<Edge> heapSort(std::vector<Edge> arr) {
 int Graph::primMST(std::vector<int>& mstStart, std::vector<int>& mstEnd) {
     // Placeholder for visited nodes and minimum weight initialization
     // std::cout << "TODO: Implement Prim's algorithm here.\n";
-
+    int cost;
     // Steps:
 
     // 1. Initialize visited array and minWeight array
@@ -135,7 +135,7 @@ int Graph::primMST(std::vector<int>& mstStart, std::vector<int>& mstEnd) {
     minWeight = heapSort(minWeight);
 
     while(!minWeight.empty()) {
-        // Get edge with lowest weight and unvisited destination node
+        // 3. Use a loop to find the minimum weight edge at each step
         Edge* edgeToTakePtr = nullptr;
         Edge edgeToTake;
         int size = minWeight.size();
@@ -155,15 +155,16 @@ int Graph::primMST(std::vector<int>& mstStart, std::vector<int>& mstEnd) {
                 break;
             }
         }
-        
+
         // If minWeight is empty and all edges' destination nodes were visited
         if(edgeToTakePtr == nullptr) {
             break;
         }
 
-        // Visit currentEdge's destination node
+        // 4. Update MST edges (mstStart and mstEnd vectors)
         mstStart.push_back(edgeToTake.node1);
         mstEnd.push_back(edgeToTake.node2);
+        cost += edgeToTake.weight;
         vertex = edgeToTake.node2;
         visitedArray[vertex - 1] = true;
 
@@ -180,53 +181,7 @@ int Graph::primMST(std::vector<int>& mstStart, std::vector<int>& mstEnd) {
         minWeight = heapSort(minWeight);
     }
 
-
-    // do {
-    //     visitedArray[vertex - 1] = true;
-
-    //     for(int i = 0; i < adjMatrix[vertex - 1].size(); i++) {
-    //         // Add into the heap
-    //         if(adjMatrix[vertex - 1][i] != 0) {
-    //             Edge tempEdge;
-    //             tempEdge.node1 = vertex;
-    //             tempEdge.node2 = i + 1 ;
-    //             tempEdge.weight = adjMatrix[vertex - 1][i];
-    //             minWeight.push_back(tempEdge);
-    //         }
-    //     }
-
-    //     // Sort minWeight
-    //     minWeight = heapSort(minWeight);
-
-    //     // DELETE ME
-    //     // Print minWeight
-    //     for(int i = 0; i < minWeight.size(); i++) {
-    //         std::cout << minWeight[i].weight << ", ";
-    //     }
-    //     std::cout<< std::endl;
-
-    //     // 3. Use a loop to find the minimum weight edge at each step
-    //     Edge edgeToTake;
-    //     for(int i = 0; i < minWeight.size(); i++) {
-    //         if(minWeight.size() > 0) {
-    //             edgeToTake = minWeight[0];
-    //             minWeight.erase(minWeight.begin());
-    //         }
-
-    //         if(visitedArray[edgeToTake.node2 - 1] != true || minWeight.size() <= 0)
-    //             break;
-    //     } 
-
-    //     // 4. Update MST edges (mstStart and mstEnd vectors)
-    //     mstStart.push_back(edgeToTake.node1);
-    //     mstEnd.push_back(edgeToTake.node2);
-    //     vertex = edgeToTake.node2;
-    // } while(minWeight.size() > 0);
-
     // 5. Return the total cost of the MST
 
-    // Placeholder output
-    std::cout << "TODO: Replace placeholder MST output with the actual MST.\n";
-
-    return 0; // TODO: Return the actual total cost of the MST
+    return cost; // TODO: Return the actual total cost of the MST
 }
