@@ -18,6 +18,11 @@ bool Graph::loadGraphFromFile(const std::string& filename) {
         adjMatrix.push_back(temp);
     }
 
+    // Cost to travel to same village is 0
+    for(int i = 0; i < numNodes; i++) {
+        adjMatrix[i][i] = 0;
+    }
+
     // Implement the adjacency matrix setup
     for(int i = 0; i < numEdges; i++) {
         int vertex1 = INF, vertex2 = INF, weight = INF;
@@ -32,6 +37,18 @@ bool Graph::loadGraphFromFile(const std::string& filename) {
         adjMatrix[vertex1 - 1][vertex2 - 1] = weight; // vertex - 1 b/c input.txt uses index starting with 1 instead of 0
         adjMatrix[vertex2 - 1][vertex1 - 1] = weight; // The graph is undirected
     }
+
+    // Print adjMatrix
+    // for(int i = 0; i < adjMatrix.size(); i++) {
+    //     for(int j = 0; j < adjMatrix[0].size(); j++) {
+    //         if(adjMatrix[i][j] == INF) {
+    //             std::cout << "I" << " ";
+    //             continue;
+    //         }
+    //         std::cout << adjMatrix[i][j] << " ";
+    //     }
+    //     std::cout << std::endl;
+    // }
 
     infile.close();
     return true;
@@ -128,7 +145,7 @@ int Graph::primMST(std::vector<int>& mstStart, std::vector<int>& mstEnd) {
     visitedArray[vertex - 1] = true;
     int matrixSize = adjMatrix[0].size();
     for(int i = 0; i < matrixSize; i++) {
-        if(adjMatrix[vertex - 1][i] != INF) {
+        if(adjMatrix[vertex - 1][i] != INF && adjMatrix[vertex - 1][i] != 0) {
             Edge tempEdge;
             tempEdge.node1 = vertex;
             tempEdge.node2 = i + 1;
@@ -188,7 +205,7 @@ int Graph::primMST(std::vector<int>& mstStart, std::vector<int>& mstEnd) {
         // Add vertex's edges to heap
         int adjMatrixSize = adjMatrix[0].size();
         for(int i = 0; i < adjMatrixSize; i++) {
-            if(adjMatrix[vertex - 1][i] != INF) {
+            if(adjMatrix[vertex - 1][i] != INF && adjMatrix[vertex - 1][i] != 0) {
                 Edge tempEdge;
                 tempEdge.node1 = vertex;
                 tempEdge.node2 = i + 1;
@@ -200,5 +217,5 @@ int Graph::primMST(std::vector<int>& mstStart, std::vector<int>& mstEnd) {
     }
 
     // 5. Return the total cost of the MST
-    return cost; // TODO: Return the actual total cost of the MST
+    return cost; 
 }
