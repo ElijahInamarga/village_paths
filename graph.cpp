@@ -20,8 +20,15 @@ bool Graph::loadGraphFromFile(const std::string& filename) {
 
     // Implement the adjacency matrix setup
     for(int i = 0; i < numEdges; i++) {
-        int vertex1, vertex2, weight;
+        int vertex1 = INF, vertex2 = INF, weight = INF;
         infile >> vertex1 >> vertex2 >> weight;
+
+        // Check for missing edges or weights
+        if(vertex1 == INF || vertex2 == INF || weight == INF) {
+            std::cerr << "Error: missing edges or weights when loading graph from file" << std::endl;
+            return false;
+        }
+
         adjMatrix[vertex1 - 1][vertex2 - 1] = weight; // vertex - 1 b/c input.txt uses index starting with 1 instead of 0
         adjMatrix[vertex2 - 1][vertex1 - 1] = weight; // The graph is undirected
     }
