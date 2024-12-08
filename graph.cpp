@@ -101,6 +101,15 @@ std::vector<Edge> heapSort(std::vector<Edge> arr) {
     return temp;
 }
 
+// Used to check if graph is disconnected
+bool areAllNodesVisited(bool arr[], int arrSize) {
+    for(int i = 0; i < arrSize; i++) {
+        if(arr[i] == false)
+            return false;
+    }
+    return true;
+}
+
 // Prim's algorithm to find the MST
 int Graph::primMST(std::vector<int>& mstStart, std::vector<int>& mstEnd) {
     int cost;
@@ -154,6 +163,14 @@ int Graph::primMST(std::vector<int>& mstStart, std::vector<int>& mstEnd) {
                 edgeToTakePtr = &edgeToTake;
                 break;
             }
+        }
+
+        // Check if no MST exists
+        if(edgeToTakePtr == nullptr && !areAllNodesVisited(visitedArray, numNodes)) {
+            std::cerr << "Error: no MST exists for this graph" << std::endl;
+            mstStart.clear();
+            mstEnd.clear();
+            return -1;
         }
 
         // Stop prims algorithm if minWeight is empty and all edges' destination nodes were visited
