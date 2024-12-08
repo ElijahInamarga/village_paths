@@ -41,7 +41,8 @@ struct Edge {
 
 std::vector<Edge> heapify(std::vector<Edge> arr) {
     // Build the heap using upheap
-    for(int i = 0; i < arr.size(); i++) {
+    int size = arr.size();
+    for(int i = 0; i < size; i++) {
         int current = i;
         int parent = (current - 1) / 2;
         while(current != 0 && arr[current].weight < arr[parent].weight) {
@@ -110,7 +111,8 @@ int Graph::primMST(std::vector<int>& mstStart, std::vector<int>& mstEnd) {
     // 2. Start from node 1
     int vertex = 1;
     visitedArray[vertex - 1] = true;
-    for(int i = 0; i < adjMatrix[0].size(); i++) {
+    int size = adjMatrix[0].size();
+    for(int i = 0; i < size; i++) {
         if(adjMatrix[vertex - 1][i] != INF) {
             Edge tempEdge;
             tempEdge.node1 = vertex;
@@ -157,7 +159,8 @@ int Graph::primMST(std::vector<int>& mstStart, std::vector<int>& mstEnd) {
         visitedArray[vertex - 1] = true;
 
         // Add vertex's edges to heap
-        for(int i = 0; i < adjMatrix[0].size(); i++) {
+        int adjMatrixSize = adjMatrix[0].size();
+        for(int i = 0; i < adjMatrixSize; i++) {
             if(adjMatrix[vertex - 1][i] != INF) {
                 Edge tempEdge;
                 tempEdge.node1 = vertex;

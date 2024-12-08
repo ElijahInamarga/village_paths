@@ -1,10 +1,16 @@
+# Compiler and flags
 CXX = g++
 CXXFLAGS = -Wall -std=c++17
+
+# Executable and source files
 TARGET = kingdom_expansion
-SRC = main.cpp graph.cpp graph.h input.txt
+SOURCES = main.cpp graph.cpp
+HEADERS = graph.h
 
-$(TARGET): $(SRC)
-	$(CXX) $(CXXFLAGS) -o $(TARGET) $(SRC)
+# Build target
+$(TARGET): $(SOURCES) $(HEADERS)
+	$(CXX) $(CXXFLAGS) -o $(TARGET) $(SOURCES)
 
+# Clean build files
 clean:
 	rm -f $(TARGET)
