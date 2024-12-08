@@ -41,8 +41,8 @@ struct Edge {
 
 std::vector<Edge> heapify(std::vector<Edge> arr) {
     // Build the heap using upheap
-    int size = arr.size();
-    for(int i = 0; i < size; i++) {
+    int arrSize = arr.size();
+    for(int i = 0; i < arrSize; i++) {
         int current = i;
         int parent = (current - 1) / 2;
         while(current != 0 && arr[current].weight < arr[parent].weight) {
@@ -96,9 +96,8 @@ std::vector<Edge> heapSort(std::vector<Edge> arr) {
 
 // Prim's algorithm to find the MST
 int Graph::primMST(std::vector<int>& mstStart, std::vector<int>& mstEnd) {
-    // Placeholder for visited nodes and minimum weight initialization
-    // std::cout << "TODO: Implement Prim's algorithm here.\n";
     int cost;
+
     // Steps:
 
     // 1. Initialize visited array and minWeight array
@@ -111,8 +110,8 @@ int Graph::primMST(std::vector<int>& mstStart, std::vector<int>& mstEnd) {
     // 2. Start from node 1
     int vertex = 1;
     visitedArray[vertex - 1] = true;
-    int size = adjMatrix[0].size();
-    for(int i = 0; i < size; i++) {
+    int matrixSize = adjMatrix[0].size();
+    for(int i = 0; i < matrixSize; i++) {
         if(adjMatrix[vertex - 1][i] != INF) {
             Edge tempEdge;
             tempEdge.node1 = vertex;
@@ -126,19 +125,23 @@ int Graph::primMST(std::vector<int>& mstStart, std::vector<int>& mstEnd) {
 
     while(!minWeight.empty()) {
         // 3. Use a loop to find the minimum weight edge at each step
-        Edge* edgeToTakePtr = nullptr;
+
+        Edge* edgeToTakePtr = nullptr; // To check later if there is a valid edge to take (I am using a ptr because edgeToTake can't be NULL)
         Edge edgeToTake;
-        int size = minWeight.size();
-        for(int i = 0; i < size; i++) {
+        int heapSize = minWeight.size();
+        for(int i = 0; i < heapSize; i++) {
             Edge currentEdge;
-            if(size > 0) {
+
+            // Take from heap
+            if(heapSize > 0) {
                 currentEdge = minWeight[0];
                 minWeight.erase(minWeight.begin());
-                size--;
+                heapSize--;
             } else {
                 break;
             }
 
+            // Check if edge's distination node is already visited
             if(visitedArray[currentEdge.node2 - 1] == false) {
                 edgeToTake = currentEdge;
                 edgeToTakePtr = &edgeToTake;
@@ -146,7 +149,7 @@ int Graph::primMST(std::vector<int>& mstStart, std::vector<int>& mstEnd) {
             }
         }
 
-        // If minWeight is empty and all edges' destination nodes were visited
+        // Stop prims algorithm if minWeight is empty and all edges' destination nodes were visited
         if(edgeToTakePtr == nullptr) {
             break;
         }
