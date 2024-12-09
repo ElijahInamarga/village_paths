@@ -129,7 +129,7 @@ bool areAllNodesVisited(bool arr[], int arrSize) {
 
 // Prim's algorithm to find the MST
 int Graph::primMST(std::vector<int>& mstStart, std::vector<int>& mstEnd) {
-    int cost;
+    int cost = 0;
 
     // Steps:
 
