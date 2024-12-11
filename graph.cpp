@@ -37,19 +37,6 @@ bool Graph::loadGraphFromFile(const std::string& filename) {
         adjMatrix[vertex1 - 1][vertex2 - 1] = weight; // vertex - 1 b/c input.txt uses index starting with 1 instead of 0
         adjMatrix[vertex2 - 1][vertex1 - 1] = weight; // The graph is undirected
     }
-
-    // Print adjMatrix
-    // for(int i = 0; i < adjMatrix.size(); i++) {
-    //     for(int j = 0; j < adjMatrix[0].size(); j++) {
-    //         if(adjMatrix[i][j] == INF) {
-    //             std::cout << "I" << " ";
-    //             continue;
-    //         }
-    //         std::cout << adjMatrix[i][j] << " ";
-    //     }
-    //     std::cout << std::endl;
-    // }
-
     infile.close();
     return true;
 }
@@ -118,15 +105,6 @@ std::vector<Edge> heapSort(std::vector<Edge> arr) {
     return temp;
 }
 
-// Used to check if graph is disconnected
-bool areAllNodesVisited(bool arr[], int arrSize) {
-    for(int i = 0; i < arrSize; i++) {
-        if(arr[i] == false)
-            return false;
-    }
-    return true;
-}
-
 // Prim's algorithm to find the MST
 int Graph::primMST(std::vector<int>& mstStart, std::vector<int>& mstEnd) {
     int cost = 0;
@@ -145,7 +123,7 @@ int Graph::primMST(std::vector<int>& mstStart, std::vector<int>& mstEnd) {
     visitedArray[vertex - 1] = true;
     int matrixSize = adjMatrix[0].size();
     for(int i = 0; i < matrixSize; i++) {
-        if(adjMatrix[vertex - 1][i] != INF && adjMatrix[vertex - 1][i] != 0) {
+        if(adjMatrix[vertex - 1][i] != INF || adjMatrix[vertex - 1][i] != 0) {
             Edge tempEdge;
             tempEdge.node1 = vertex;
             tempEdge.node2 = i + 1;
@@ -182,14 +160,6 @@ int Graph::primMST(std::vector<int>& mstStart, std::vector<int>& mstEnd) {
             }
         }
 
-        // Check if no MST exists
-        if(edgeToTakePtr == nullptr && !areAllNodesVisited(visitedArray, numNodes)) {
-            std::cerr << "Error: no MST exists for this graph" << std::endl;
-            mstStart.clear();
-            mstEnd.clear();
-            return -1;
-        }
-
         // Stop prims algorithm if minWeight is empty and all edges' destination nodes were visited
         if(edgeToTakePtr == nullptr) {
             break;
@@ -205,7 +175,7 @@ int Graph::primMST(std::vector<int>& mstStart, std::vector<int>& mstEnd) {
         // Add vertex's edges to heap
         int adjMatrixSize = adjMatrix[0].size();
         for(int i = 0; i < adjMatrixSize; i++) {
-            if(adjMatrix[vertex - 1][i] != INF && adjMatrix[vertex - 1][i] != 0) {
+            if(adjMatrix[vertex - 1][i] != INF || adjMatrix[vertex - 1][i] != 0) {
                 Edge tempEdge;
                 tempEdge.node1 = vertex;
                 tempEdge.node2 = i + 1;
