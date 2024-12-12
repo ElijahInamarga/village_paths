@@ -123,7 +123,7 @@ int Graph::primMST(std::vector<int>& mstStart, std::vector<int>& mstEnd) {
     visitedArray[vertex - 1] = true;
     int matrixSize = adjMatrix[0].size();
     for(int i = 0; i < matrixSize; i++) {
-        if(adjMatrix[vertex - 1][i] != INF || adjMatrix[vertex - 1][i] != 0) {
+        if(adjMatrix[vertex - 1][i] != INF && adjMatrix[vertex - 1][i] != 0) {
             Edge tempEdge;
             tempEdge.node1 = vertex;
             tempEdge.node2 = i + 1;
@@ -140,19 +140,14 @@ int Graph::primMST(std::vector<int>& mstStart, std::vector<int>& mstEnd) {
         Edge* edgeToTakePtr = nullptr; // To check later if there is a valid edge to take (I am using a ptr because edgeToTake can't be NULL)
         Edge edgeToTake;
         int heapSize = minWeight.size();
-        for(int i = 0; i < heapSize; i++) {
+        while(heapSize > 0) {
+            // Pop from heap
             Edge currentEdge;
+            currentEdge = minWeight[0];
+            minWeight.erase(minWeight.begin());
+            heapSize--;
 
-            // Take from heap
-            if(heapSize > 0) {
-                currentEdge = minWeight[0];
-                minWeight.erase(minWeight.begin());
-                heapSize--;
-            } else {
-                break;
-            }
-
-            // Check if edge's distination node is already visited
+            // Check if edge's distination node is not visited
             if(visitedArray[currentEdge.node2 - 1] == false) {
                 edgeToTake = currentEdge;
                 edgeToTakePtr = &edgeToTake;
@@ -175,7 +170,7 @@ int Graph::primMST(std::vector<int>& mstStart, std::vector<int>& mstEnd) {
         // Add vertex's edges to heap
         int adjMatrixSize = adjMatrix[0].size();
         for(int i = 0; i < adjMatrixSize; i++) {
-            if(adjMatrix[vertex - 1][i] != INF || adjMatrix[vertex - 1][i] != 0) {
+            if(adjMatrix[vertex - 1][i] != INF && adjMatrix[vertex - 1][i] != 0) {
                 Edge tempEdge;
                 tempEdge.node1 = vertex;
                 tempEdge.node2 = i + 1;
